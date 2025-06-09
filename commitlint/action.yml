@@ -1,0 +1,36 @@
+name: Github action runs commitlint
+
+description: |-
+  A GitHub Action runs commitlint with default configuration.
+  This action should only be executed on push and pull_request events.
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+runs:
+  using: 'composite'
+  steps:
+    - if: github.event_name != 'push' && github.event_name != 'pull_request'
+      shell: bash
+      run: |
+        echo "This action should only be executed on push and pull_request events." >&2
+        exit 1
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - shell: bash
+      run: |
+        npm install -g @commitlint/cli @commitlint/config-conventional
+        CONFIG="$(mktemp)"
+        echo "module.exports = {extends: ['@commitlint/config-conventional']};" > "$CONFIG"
+        if [ "${{ github.event_name }}" == "push" ]; then
+          FROM=${{ github.event.push.before }}
+          TO=${{ github.event.push.after }}
+        elif [ "${{ github.event_name }}" == "pull_request" ]; then
+          FROM=${{ github.event.pull_request.base.sha }}
+          TO=${{ github.event.pull_request.head.sha }}
+        fi
+        commitlint --verbose --from $FROM --to $TO --config "$CONFIG"
