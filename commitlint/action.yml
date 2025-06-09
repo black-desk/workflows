@@ -34,7 +34,7 @@ runs:
           TO=${{ github.event.pull_request.head.sha }}
         fi
 
-        if commitlint --print-config &>/dev/null; then
+        if commitlint --last &>/dev/null; then
           commitlint --verbose --from $FROM --to $TO
           exit
         fi
