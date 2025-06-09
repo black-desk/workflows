@@ -34,6 +34,10 @@ runs:
         cache: true
         cache-dependency-path: ${{ github.workspace }}/go.sum
 
+    - if: github.event_name == 'push'
+      uses: black-desk/workflows/tag@master
+      id: tag
+
     - uses: goreleaser/goreleaser-action@v6
       with:
         distribution: goreleaser
@@ -41,3 +45,4 @@ runs:
         args: release --clean
       env:
         GITHUB_TOKEN: ${{ github.token }}
+        CUSTOM_TAG: ${{ steps.tag.outputs.version }}
