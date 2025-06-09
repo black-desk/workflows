@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+
+name: Continuous integration for golang projects
+
+description: |-
+  A GitHub Action for continuous integration of my personal golang projects.
+
+  This action requires following permissions:
+    contents: write
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        if [[ "${{ github.ref_name }}" != v* ]]; then
+          echo "Invalid tag ${{ github.ref_name }}" >&2
+          exit 1
+        fi
+
+    - uses: black-desk/workflows/common@master
+
+    - uses: actions/setup-go@v5
+      with:
+        go-version: stable
+        cache: true
+        cache-dependency-path: ${{ github.workspace }}/go.sum
+
+    - uses: goreleaser/goreleaser-action@v6
+      with:
+        distribution: goreleaser
+        version: latest
+        args: release --clean
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
