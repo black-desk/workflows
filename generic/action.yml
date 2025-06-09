@@ -16,7 +16,7 @@ runs:
   steps:
     - uses: black-desk/workflows/common@master
     - uses: black-desk/clean@master
-    - if: github.event_name == 'push' || github.event_name == 'pull_request'
+    - if: github.event_name == 'pull_request'
       uses: black-desk/workflows/commitlint@master
     - uses: gitleaks/gitleaks-action@v2
       env:
