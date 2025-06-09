@@ -1,0 +1,41 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+
+name: Continuous integration for autotools projects
+
+description: |-
+  A GitHub Action for continuous integration of my personal autotools projects.
+
+  This action requires following permissions:
+    id-token: write
+    contents: write
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: black-desk/workflows/common@master
+
+    - shell: bash
+      run: |
+        if [ -f configure ]; then
+          ./configure
+        else
+          echo >&2 "'configure' script not found. Skipping configuration step"
+        fi
+        make
+        if make -n test &>/dev/null; then
+          make test
+        else
+          echo >&2 "'test' target not found. Skipping testing"
+        fi
+
+    - uses: codecov/codecov-action@v5
+      with:
+        use_oidc: true
+        fail_ci_if_error: true
