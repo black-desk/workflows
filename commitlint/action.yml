@@ -39,8 +39,8 @@ runs:
           exit
         fi
 
-        CONFIG="$(mktemp commitlintrc.XXXXXXXXXX.mjs)"
+        CONFIG="$(mktemp commitlint.config.XXXXXXXXXX.js)"
         echo "Config file of commitlint missing, generate default config at $CONFIG" >&2
 
-        echo "module.exports = {extends: ['@commitlint/config-conventional']};" > "$CONFIG"
+        echo "export default { extends: [ '@commitlint/config-conventional' ] }" > "$CONFIG"
         commitlint --verbose --from $FROM --to $TO --config "$CONFIG"
