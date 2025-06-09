@@ -24,13 +24,19 @@ runs:
     - shell: bash
       run: |
         npm install -g @commitlint/cli @commitlint/config-conventional
-        CONFIG="$(mktemp)"
-        echo "module.exports = {extends: ['@commitlint/config-conventional']};" > "$CONFIG"
-        if [ "${{ github.event_name }}" == "push" ]; then
-          FROM=${{ github.event.push.before }}
-          TO=${{ github.event.push.after }}
-        elif [ "${{ github.event_name }}" == "pull_request" ]; then
+
+        FROM=${{ github.event.push.before }}
+        TO=${{ github.event.push.after }}
+
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
           FROM=${{ github.event.pull_request.base.sha }}
           TO=${{ github.event.pull_request.head.sha }}
         fi
+
+        if commitlint --print-config &>/dev/null; then
+          commitlint --verbose --from $FROM --to $TO
+        fi
+
+        CONFIG="$(mktemp commitlintrc.XXXXXXXXXX.mjs)"
+        echo "module.exports = {extends: ['@commitlint/config-conventional']};" > "$CONFIG"
         commitlint --verbose --from $FROM --to $TO --config "$CONFIG"
