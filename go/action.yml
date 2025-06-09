@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+
+name: Continuous integration for golang projects
+
+description: |-
+  A GitHub Action for continuous integration of my personal golang projects.
+
+  This action requires following permissions:
+    id-token: write
+    contents: write
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: black-desk/workflows/common@master
+
+    - uses: actions/setup-go@v5
+      with:
+        go-version: stable
+        cache: true
+        cache-dependency-path: ${{ github.workspace }}/go.sum
+
+    - shell: bash
+      run: |
+        go test ./... -coverprofile=coverage.txt
+
+    - uses: codecov/codecov-action@v5
+      with:
+        use_oidc: true
+        files: coverage.txt
+        fail_ci_if_error: true
