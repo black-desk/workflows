@@ -13,10 +13,10 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - if: github.event_name != 'push' && github.event_name != 'pull_request'
+    - if: github.event_name != 'pull_request'
       shell: bash
       run: |
-        echo "This action should only be executed on push and pull_request events." >&2
+        echo "This action should only be executed on pull_request event." >&2
         exit 1
     - uses: actions/setup-node@v4
       with:
