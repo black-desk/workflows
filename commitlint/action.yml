@@ -21,7 +21,8 @@ runs:
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
-    - shell: bash
+    - name: Install and run commitlint CLI
+      shell: bash
       run: |
         npm install -g @commitlint/cli @commitlint/config-conventional
 
@@ -35,8 +36,11 @@ runs:
 
         if commitlint --print-config &>/dev/null; then
           commitlint --verbose --from $FROM --to $TO
+          exit
         fi
 
         CONFIG="$(mktemp commitlintrc.XXXXXXXXXX.mjs)"
+        echo "Config file of commitlint missing, generate default config at $CONFIG" >&2
+
         echo "module.exports = {extends: ['@commitlint/config-conventional']};" > "$CONFIG"
         commitlint --verbose --from $FROM --to $TO --config "$CONFIG"
