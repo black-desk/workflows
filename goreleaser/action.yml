@@ -19,13 +19,6 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - shell: bash
-      run: |
-        if [[ "${{ github.ref_name }}" != v* ]]; then
-          echo "Invalid tag ${{ github.ref_name }}" >&2
-          exit 1
-        fi
-
     - uses: black-desk/workflows/common@master
 
     - uses: actions/setup-go@v5
@@ -38,7 +31,8 @@ runs:
       uses: black-desk/workflows/tag@master
       id: tag
 
-    - uses: goreleaser/goreleaser-action@v6
+    - if: steps.tag.outputs.version != ''
+      uses: goreleaser/goreleaser-action@v6
       with:
         distribution: goreleaser
         version: latest
@@ -46,3 +40,12 @@ runs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
         CUSTOM_TAG: ${{ steps.tag.outputs.version }}
+
+    - if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
+      uses: goreleaser/goreleaser-action@v6
+      with:
+        distribution: goreleaser
+        version: latest
+        args: release --clean
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
