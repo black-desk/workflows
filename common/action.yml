@@ -1,0 +1,17 @@
+name: Common logic for all actions
+
+description: |-
+  A common logic for all gitHub actions in this repository.
+  This action should not be used alone.
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4

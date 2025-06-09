@@ -1,0 +1,35 @@
+name: Continuous integration for rust projects
+
+description: |-
+  A GitHub Action for continuous integration of my personal Rust projects.
+
+  This action requires following permissions:
+    id-token: write
+    contents: write
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: black-desk/workflows/common@master
+
+    - uses: dtolnay/rust-toolchain@stable
+
+    - uses: taiki-e/install-action@cargo-llvm-cov
+
+    - name: Run tests
+      shell: bash
+      run: |
+        cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        use_oidc: true
+        files: lcov.info
+        fail_ci_if_error: true

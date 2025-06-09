@@ -1,0 +1,14 @@
+name: Continuous integration for pull requests
+
+on:
+  pull_request:
+
+jobs:
+  generic:
+    name: Generic github action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./generic

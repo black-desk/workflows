@@ -1,0 +1,18 @@
+name: Generic github action
+
+description: |-
+  This is a generic GitHub Action
+  which should be running on all my personal projects
+  to keep the code clean.
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: black-desk/workflows/common@master
+    - uses: black-desk/clean@master
