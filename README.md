@@ -1,3 +1,8 @@
+<!--
+SPDX-License-Identifier: MIT
+SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+-->
+
 # Workflows
 
 This repository provides a collection of reusable GitHub Actions workflow templates. Each subdirectory contains a specific type of workflow or action that can be used to automate various tasks in your projects.

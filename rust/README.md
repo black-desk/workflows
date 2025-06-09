@@ -1,3 +1,8 @@
+<!--
+SPDX-License-Identifier: MIT
+SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+-->
+
 # Continuous integration for rust projects
 
 ## Permissions
