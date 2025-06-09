@@ -14,18 +14,17 @@ contents: write
 ## Example
 
 ``` yaml
-name: Continuous integration for master
+name: Automatic pre-release
 
 on:
   push:
-    tag:
-      - v*
+    tags: ["v*-*"]
 
 jobs:
-  go:
-    runs-on: ubuntu-latest
+  goreleaser:
     permissions:
       contents: write
+    runs-on: ubuntu-latest
     steps:
       - uses: black-desk/workflows/goreleaser@master
 ```
