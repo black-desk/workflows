@@ -1,0 +1,55 @@
+# SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+#
+# SPDX-License-Identifier: MIT
+
+name: Github action to automatically generate a tag
+
+description: |-
+  A GitHub Action to automatically generate a tag for my personal projects.
+
+  This action requires the following permissions:
+    contents: write
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+outputs:
+  version:
+    description: The version of the project, which is the tag name.
+    value: ${{ steps.tag.outputs.version }}
+
+runs:
+  using: 'composite'
+  steps:
+    - id: tag
+      shell: bash
+      run: |
+        script="./scripts/get-project-version.sh"
+
+        if [ ! -f "$script" ]; then
+          script="./tools/get-project-version.sh"
+        fi
+
+        if [ -f "$script" ]; then
+          echo "Using script: $script" >&2
+          version="$("$script")"
+        elif command -v cargo &>/dev/null; then
+          echo "Using cargo to get version" >&2
+          # https://stackoverflow.com/a/75023781
+          version="$(cargo pkgid | awk -F'[#@]' '{print $NF}')"
+        else
+          echo "Failed to determine project version" >&2
+          exit 1
+        fi
+
+        if git rev-parse "$version" &>/dev/null; then
+          echo "Tag $version already exists" >&2
+          exit
+        fi
+
+        git tag "$version"
+        git push --tags
+        echo version="$version" >> $GITHUB_OUTPUT
