@@ -16,3 +16,6 @@ runs:
   steps:
     - uses: black-desk/workflows/common@master
     - uses: black-desk/clean@master
+    - uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
