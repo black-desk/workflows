@@ -26,16 +26,24 @@ runs:
       run: |
         npm install -g @commitlint/cli @commitlint/config-conventional
 
-        FROM=${{ github.event.push.before }}
-        TO=${{ github.event.push.after }}
+        FROM="${{ github.event.push.before }}"
+        TO="${{ github.event.push.after }}"
 
         if [ "${{ github.event_name }}" == "pull_request" ]; then
-          FROM=${{ github.event.pull_request.base.sha }}
-          TO=${{ github.event.pull_request.head.sha }}
+          FROM="${{ github.event.pull_request.base.sha }}"
+          TO="${{ github.event.pull_request.head.sha }}"
+        fi
+
+        if [ -z "$FROM" ]; then
+          exit 1
+        fi
+
+        if [ -z "$TO" ]; then
+          exit 1
         fi
 
         if commitlint --last &>/dev/null; then
-          commitlint --verbose --from $FROM --to $TO
+          commitlint --verbose --from "$FROM" --to "$TO"
           exit
         fi
 
@@ -43,4 +51,4 @@ runs:
         echo "Config file of commitlint missing, generate default config at $CONFIG" >&2
 
         echo "export default { extends: [ '@commitlint/config-conventional' ] }" > "$CONFIG"
-        commitlint --verbose --from $FROM --to $TO --config "$CONFIG"
+        commitlint --verbose --from "$FROM" --to "$TO" --config "$CONFIG"
