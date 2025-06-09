@@ -1,6 +1,7 @@
 <!--
-SPDX-License-Identifier: MIT
 SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+
+SPDX-License-Identifier: MIT
 -->
 
 # Build a container image then push to ghcr.io
