@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
 SPDX-License-Identifier: MIT
 -->
 
-# Continuous integration for golang projects
+# Automatic (pre)release via goreleaser
 
 ## Permissions
 
@@ -15,11 +15,14 @@ contents: write
 ## Example
 
 ``` yaml
-name: Automatic pre-release
+name: Automatic (pre)release via goreleaser
 
 on:
   push:
-    tags: ["v*-*"]
+    tags:
+      - v*-*
+    branches:
+      - master
 
 jobs:
   goreleaser:
