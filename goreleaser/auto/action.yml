@@ -33,7 +33,7 @@ runs:
           exit 1
         fi
 
-        version="$("$scripts")"
+        version="$("$script")"
 
         if ! git rev-parse "$version" &>/dev/null; then
           git tag "$version"
