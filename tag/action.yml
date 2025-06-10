@@ -36,7 +36,7 @@ runs:
         if [ -f "$script" ]; then
           echo "Using script: $script" >&2
           version="$("$script")"
-        elif command -v cargo &>/dev/null; then
+        elif [ -f "Cargo.lock" ]; then
           echo "Using cargo to get version" >&2
           # https://stackoverflow.com/a/75023781
           version="$(cargo pkgid | awk -F'[#@]' '{print $NF}')"
