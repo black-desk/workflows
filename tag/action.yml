@@ -55,5 +55,4 @@ runs:
         fi
 
         git tag "$version"
-        git push --tags
         echo version="$version" >> $GITHUB_OUTPUT
