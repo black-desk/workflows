@@ -43,7 +43,7 @@ runs:
         elif [ -f "Cargo.lock" ]; then
           echo "Using cargo to get version" >&2
           # https://stackoverflow.com/a/75023781
-          version="$(cargo pkgid | awk -F'[#@]' '{print $NF}')"
+          version=v"$(cargo pkgid | awk -F'[#@]' '{print $NF}')"
         else
           echo "Failed to determine project version" >&2
           exit 1
