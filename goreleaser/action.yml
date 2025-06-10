@@ -21,6 +21,8 @@ runs:
   steps:
     - uses: black-desk/workflows/common@master
 
+    - uses: dtolnay/rust-toolchain@stable
+
     - uses: actions/setup-go@v5
       with:
         go-version: stable
