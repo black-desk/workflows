@@ -19,6 +19,8 @@ branding:
 runs:
   using: 'composite'
   steps:
+    - uses: black-desk/workflows/common@master
+
     - uses: dtolnay/rust-toolchain@stable
 
     - uses: actions/setup-go@v5
@@ -26,8 +28,6 @@ runs:
         go-version: stable
         cache: true
         cache-dependency-path: ${{ github.workspace }}/go.sum
-
-    - uses: black-desk/workflows/common@master
 
     - if: github.event_name == 'push'
       uses: black-desk/workflows/tag@master
