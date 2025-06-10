@@ -23,6 +23,8 @@ runs:
 
     - uses: dtolnay/rust-toolchain@stable
 
+    - uses: mlugg/setup-zig@v2
+
     - uses: actions/setup-go@v5
       with:
         go-version: stable
