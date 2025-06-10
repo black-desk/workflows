@@ -13,16 +13,15 @@ branding:
   icon: check-circle
   color: blue
 
-inputs:
-  docker__build-push-action__push:
-    description: See https://github.com/docker/build-push-action
-    required: false
-    default: 'false'
-
 runs:
   using: composite
   steps:
     - uses: black-desk/workflows/common@master
+
+    - id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}
 
     - uses: docker/login-action@v3
       with:
@@ -34,6 +33,6 @@ runs:
 
     - uses: docker/build-push-action@v6
       with:
-        file: Containerfile
-        push: ${{ inputs.docker__build-push-action__push }}
-        tags: ghcr.io/${{ github.repository }}:latest
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
