@@ -21,17 +21,21 @@ runs:
   steps:
     - uses: black-desk/workflows/common@master
 
-    - uses: dtolnay/rust-toolchain@stable
+    - name: Set up Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
 
-    - uses: mlugg/setup-zig@v2
+    - name: Set up Zig toolchain
+      uses: mlugg/setup-zig@v2
 
-    - uses: actions/setup-go@v5
+    - name: Set up Go
+      uses: actions/setup-go@v5
       with:
         go-version: stable
         cache: true
         cache-dependency-path: ${{ github.workspace }}/go.sum
 
     - if: github.event_name == 'push'
+      name: Generate new version tag if any
       uses: black-desk/workflows/tag@master
       id: tag
 

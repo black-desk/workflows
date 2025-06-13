@@ -22,17 +22,20 @@ runs:
   steps:
     - uses: black-desk/workflows/common@master
 
-    - uses: actions/setup-go@v5
+    - name: Set up Go
+      uses: actions/setup-go@v5
       with:
         go-version: stable
         cache: true
         cache-dependency-path: ${{ github.workspace }}/go.sum
 
-    - shell: bash
+    - name: Build and test
+      shell: bash
       run: |
         go test ./... -coverprofile=coverage.txt
 
-    - uses: codecov/codecov-action@v5
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v5
       with:
         use_oidc: true
         files: coverage.txt
