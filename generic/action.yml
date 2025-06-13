@@ -19,10 +19,14 @@ runs:
   using: 'composite'
   steps:
     - uses: black-desk/workflows/common@master
-    - uses: black-desk/clean@master
-    - uses: fsfe/reuse-action@v5
-    - uses: gitleaks/gitleaks-action@v2
+    - name: Lint code with black-desk/clean
+      uses: black-desk/clean@master
+    - name: Lint code with REUSE
+      uses: fsfe/reuse-action@v5
+    - name: Lint code with gitleaks
+      uses: gitleaks/gitleaks-action@v2
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - if: github.event_name == 'pull_request'
+      name: Lint commit messages with commitlint
       uses: black-desk/workflows/commitlint@master
