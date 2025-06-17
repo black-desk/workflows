@@ -23,8 +23,6 @@ runs:
     - uses: codecov/codecov-action@v5
       with:
         use_oidc: true
-        # - `./coverage/.resultset.json`:
-        #   SimpleCov https://github.com/simplecov-ruby/simplecov
         # - `lcov.info`:
         #   lcov https://github.com/linux-test-project/lcov
         # - `coverage.txt`:
