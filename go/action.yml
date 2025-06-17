@@ -34,9 +34,4 @@ runs:
       run: |
         go test ./... -coverprofile=coverage.txt
 
-    - name: Upload coverage report
-      uses: codecov/codecov-action@v5
-      with:
-        use_oidc: true
-        files: coverage.txt
-        fail_ci_if_error: true
+    - uses: black-desk/workflows/codecov@master
