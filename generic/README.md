@@ -17,7 +17,7 @@ on:
       - master
 
 jobs:
-  rust:
+  generic:
     runs-on: ubuntu-latest
     steps:
       - uses: black-desk/workflows/generic@master
