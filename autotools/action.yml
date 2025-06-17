@@ -36,7 +36,4 @@ runs:
           echo >&2 "'test' target not found. Skipping testing"
         fi
 
-    - uses: codecov/codecov-action@v5
-      with:
-        use_oidc: true
-        fail_ci_if_error: true
+    - uses: black-desk/workflows/codecov@master

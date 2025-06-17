@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+#
+# SPDX-License-Identifier: MIT
+
+name: Report code coverage to Codecov
+
+description: |-
+  A GitHub Action for reporting code coverage to Codecov.
+
+  This action requires following permissions:
+    id-token: write
+    contents: write
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: codecov/codecov-action@v5
+      with:
+        use_oidc: true
+        # - `./coverage/.resultset.json`:
+        #   SimpleCov https://github.com/simplecov-ruby/simplecov
+        # - `lcov.info`:
+        #   lcov https://github.com/linux-test-project/lcov
+        # - `coverage.txt`:
+        #   cargo-llvm-cov https://github.com/taiki-e/cargo-llvm-cov
+        files: ./coverage/.resultset.json,lcov.info,coverage.txt
+        fail_ci_if_error: true
