@@ -55,7 +55,7 @@ runs:
         echo "Config file of commitlint missing, generate default config at $CONFIG" >&2
 
         # NOTE: https://github.com/dependabot/dependabot-core/issues/2445#issuecomment-949633412
-        echo > "$CONFIG" <<<EOF
+        cat > "$CONFIG" <<EOF
         module.exports = {
           extends: ['@commitlint/config-conventional'],
           ignores: [(message) => /^Bumps \[.+]\(.+\) from .+ to .+\.$/m.test(message)],
