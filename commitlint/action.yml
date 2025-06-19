@@ -54,5 +54,12 @@ runs:
         CONFIG="$(mktemp commitlint.config.XXXXXXXXXX.js)"
         echo "Config file of commitlint missing, generate default config at $CONFIG" >&2
 
-        echo "export default { extends: [ '@commitlint/config-conventional' ] }" > "$CONFIG"
+        # NOTE: https://github.com/dependabot/dependabot-core/issues/2445#issuecomment-949633412
+        echo > "$CONFIG" <<<EOF
+        module.exports = {
+          extends: ['@commitlint/config-conventional'],
+          ignores: [(message) => /^Bumps \[.+]\(.+\) from .+ to .+\.$/m.test(message)],
+        }
+        EOF
+
         commitlint --verbose --from "$FROM" --to "$TO" --config "$CONFIG"
