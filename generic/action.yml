@@ -21,6 +21,8 @@ runs:
     - uses: black-desk/workflows/common@master
     - name: Lint code with black-desk/clean
       uses: black-desk/clean-action@master
+    - name: Lint code with black-desk/up2date
+      uses: black-desk/up2date-action@master
     - name: Lint code with REUSE
       uses: fsfe/reuse-action@v5
     - name: Lint code with gitleaks
