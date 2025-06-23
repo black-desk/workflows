@@ -1,0 +1,46 @@
+# SPDX-FileCopyrightText: 2025 Chen Linxuan <me@black-desk.cn>
+#
+# SPDX-License-Identifier: MIT
+
+version: 2
+updates:
+    - directory: autotools
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
+    - directory: codecov
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
+    - directory: commitlint
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
+    - directory: common
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
+    - directory: container
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
+    - directory: generic
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
+    - directory: go
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
+    - directory: goreleaser
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
+    - directory: rust
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
+    - directory: tag
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
