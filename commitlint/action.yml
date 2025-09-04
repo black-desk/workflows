@@ -22,7 +22,7 @@ runs:
       run: |
         echo "This action should only be executed on pull_request event." >&2
         exit 1
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v5
       with:
         node-version: lts/*
     - name: Install and run commitlint CLI
