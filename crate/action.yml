@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+#
+# SPDX-License-Identifier: MIT
+
+name: Continuous delivery for rust projects
+
+description: |-
+  A GitHub Action for continuous delivery of my personal rust projects.
+
+  This action requires following permissions:
+    contents: write
+
+author: Chen Linxuan
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: black-desk/workflows/common@master
+
+    - name: Set up Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - if: github.event_name == 'push'
+      name: Generate new version tag if any
+      uses: black-desk/workflows/tag@master
+      id: tag
+
+    - if: steps.tag.outputs.version != ''
+      shell: bash
+      run: |
+        cargo publish
