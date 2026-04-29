@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: Continuous integration for golang projects
+name: Automatic release via goreleaser
 
 description: |-
   A GitHub Action for continuous integration of my personal golang projects.
