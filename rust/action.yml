@@ -20,8 +20,6 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - uses: black-desk/workflows/common@master
-
     - uses: actions/checkout@v6
       with:
         fetch-depth: 0
