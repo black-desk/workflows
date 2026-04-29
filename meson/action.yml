@@ -22,13 +22,13 @@ runs:
   steps:
     - uses: black-desk/workflows/common@master
 
-    - name: Install meson and ninja
+    - name: Install build dependencies
       shell: bash
-      run: pip install meson ninja
+      run: pip install meson ninja gcovr
 
     - name: Setup build directory
       shell: bash
-      run: meson setup builddir
+      run: meson setup builddir -Db_coverage=true
 
     - name: Compile
       shell: bash
@@ -37,5 +37,11 @@ runs:
     - name: Test
       shell: bash
       run: meson test -C builddir -v
+
+    - name: Generate coverage report
+      shell: bash
+      run: |
+        ninja -C builddir coverage
+        gcovr --lcov --root . --output lcov.info builddir
 
     - uses: black-desk/workflows/codecov@master
