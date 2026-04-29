@@ -24,6 +24,10 @@ updates:
       package-ecosystem: github-actions
       schedule:
         interval: daily
+    - directory: crate
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
     - directory: generic
       package-ecosystem: github-actions
       schedule:
