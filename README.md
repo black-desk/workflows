@@ -19,6 +19,7 @@ This repository provides a collection of reusable GitHub Actions workflow templa
 - `generic/`    — Generic workflows for general automation needs.
 - `go/`         — Workflows for Go projects.
 - `goreleaser/` — Automatic releases via goreleaser for Go projects.
+- `meson/`      — Workflows for meson projects.
 - `rust/`       — Workflows for Rust projects.
 - `tag/`        — Automatically generate version tags.
 
