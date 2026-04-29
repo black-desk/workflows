@@ -10,10 +10,17 @@ This repository provides a collection of reusable GitHub Actions workflow templa
 
 ## Directory Structure
 
-- `common/`    — Common reusable workflow components.
-- `container/`  — Workflows and actions for container-based automation.
+- `autotools/`  — Workflows for autotools (configure/make) projects.
+- `codecov/`    — Report code coverage to Codecov.
+- `commitlint/` — Lint commit messages using conventional commits.
+- `common/`     — Common reusable workflow components.
+- `container/`  — Build and push container images to ghcr.io.
+- `crate/`      — Publish Rust crates to crates.io.
 - `generic/`    — Generic workflows for general automation needs.
-- `rust/`       — Workflows and actions tailored for Rust projects.
+- `go/`         — Workflows for Go projects.
+- `goreleaser/` — Automatic releases via goreleaser for Go projects.
+- `rust/`       — Workflows for Rust projects.
+- `tag/`        — Automatically generate version tags.
 
 Each directory contains an `action.yml` file describing the action or workflow, and some have a `README.md` with further details.
 
