@@ -17,6 +17,12 @@ branding:
   icon: 'check-circle'
   color: 'blue'
 
+inputs:
+  working-directory:
+    description: Directory to run the build/test commands in.
+    required: false
+    default: '.'
+
 runs:
   using: 'composite'
   steps:
@@ -30,7 +36,10 @@ runs:
 
     - name: Build and test
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
 
     - uses: black-desk/workflows/codecov@master
+      with:
+        working-directory: ${{ inputs.working-directory }}
