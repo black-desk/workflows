@@ -48,3 +48,11 @@ updates:
       package-ecosystem: github-actions
       schedule:
         interval: daily
+    - directory: testdata/go
+      package-ecosystem: gomod
+      schedule:
+        interval: daily
+    - directory: testdata/rust
+      package-ecosystem: cargo
+      schedule:
+        interval: daily
