@@ -17,6 +17,12 @@ branding:
   icon: 'check-circle'
   color: 'blue'
 
+inputs:
+  working-directory:
+    description: Directory to run the build/test commands in.
+    required: false
+    default: '.'
+
 runs:
   using: 'composite'
   steps:
@@ -27,11 +33,14 @@ runs:
       with:
         go-version: stable
         cache: true
-        cache-dependency-path: ${{ github.workspace }}/go.sum
+        cache-dependency-path: ${{ inputs.working-directory }}/go.sum
 
     - name: Build and test
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         go test ./... -coverprofile=coverage.txt
 
     - uses: black-desk/workflows/codecov@master
+      with:
+        working-directory: ${{ inputs.working-directory }}

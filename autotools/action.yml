@@ -17,12 +17,19 @@ branding:
   icon: 'check-circle'
   color: 'blue'
 
+inputs:
+  working-directory:
+    description: Directory to run the build/test commands in.
+    required: false
+    default: '.'
+
 runs:
   using: 'composite'
   steps:
     - uses: black-desk/workflows/common@master
 
     - shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         if [ -f configure ]; then
           ./configure
@@ -37,3 +44,5 @@ runs:
         fi
 
     - uses: black-desk/workflows/codecov@master
+      with:
+        working-directory: ${{ inputs.working-directory }}

@@ -17,6 +17,12 @@ branding:
   icon: 'check-circle'
   color: 'blue'
 
+inputs:
+  working-directory:
+    description: Directory to run the build/test commands in.
+    required: false
+    default: '.'
+
 runs:
   using: 'composite'
   steps:
@@ -28,20 +34,26 @@ runs:
 
     - name: Setup build directory
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: meson setup builddir -Db_coverage=true
 
     - name: Compile
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: meson compile -C builddir
 
     - name: Test
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: meson test -C builddir -v
 
     - name: Generate coverage report
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         ninja -C builddir coverage
         gcovr --lcov --root . --output lcov.info builddir
 
     - uses: black-desk/workflows/codecov@master
+      with:
+        working-directory: ${{ inputs.working-directory }}
