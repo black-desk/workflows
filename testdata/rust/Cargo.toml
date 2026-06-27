@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+#
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "testdata-rust"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "src/lib.rs"

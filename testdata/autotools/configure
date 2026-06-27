@@ -1,0 +1,10 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: Copyright 2025 Chen Linxuan <me@black-desk.cn>
+#
+# SPDX-License-Identifier: MIT
+
+# Minimal no-op configure script so the autotools action exercises its
+# ./configure step. This fixture ships a hand-written Makefile instead
+# of a real autotools setup.
+set -e
+echo "testdata/autotools: no-op configure"
