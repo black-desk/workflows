@@ -22,6 +22,7 @@ This repository provides a collection of reusable GitHub Actions workflow templa
 - `meson/`      — Workflows for meson projects.
 - `rust/`       — Workflows for Rust projects.
 - `tag/`        — Automatically generate version tags.
+- `testdata/`   — Minimal example projects for end-to-end testing of the build actions.
 
 Each directory contains an `action.yml` file describing the action or workflow, and some have a `README.md` with further details.
 
