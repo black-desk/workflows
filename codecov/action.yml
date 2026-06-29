@@ -28,7 +28,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: codecov/codecov-action@v6
+    - uses: codecov/codecov-action@v7
       with:
         use_oidc: true
         # - `lcov.info`:
