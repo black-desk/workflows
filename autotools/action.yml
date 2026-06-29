@@ -26,7 +26,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: black-desk/workflows/common@master
+    - uses: ./common
 
     - name: Install coverage tool (lcov)
       shell: bash
@@ -47,6 +47,6 @@ runs:
           echo >&2 "'test' target not found. Skipping testing"
         fi
 
-    - uses: black-desk/workflows/codecov@master
+    - uses: ./codecov
       with:
         working-directory: ${{ inputs.working-directory }}

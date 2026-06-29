@@ -26,7 +26,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: black-desk/workflows/common@master
+    - uses: ./common
 
     - name: Set up Go
       uses: actions/setup-go@v6
@@ -41,6 +41,6 @@ runs:
       run: |
         go test ./... -coverprofile=coverage.txt
 
-    - uses: black-desk/workflows/codecov@master
+    - uses: ./codecov
       with:
         working-directory: ${{ inputs.working-directory }}

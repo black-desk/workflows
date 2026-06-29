@@ -19,7 +19,7 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - uses: black-desk/workflows/common@master
+    - uses: ./common
 
     - name: Set up Rust toolchain
       uses: dtolnay/rust-toolchain@stable
@@ -36,7 +36,7 @@ runs:
 
     - if: github.event_name == 'push'
       name: Generate new version tag if any
-      uses: black-desk/workflows/tag@master
+      uses: ./tag
       id: tag
 
     - if: steps.tag.outputs.version != ''
