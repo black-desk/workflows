@@ -40,7 +40,7 @@ runs:
       id: tag
 
     - if: steps.tag.outputs.version != ''
-      uses: goreleaser/goreleaser-action@v6
+      uses: goreleaser/goreleaser-action@v7
       with:
         distribution: goreleaser
         version: latest
@@ -50,7 +50,7 @@ runs:
         CUSTOM_TAG: ${{ steps.tag.outputs.version }}
 
     - if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
-      uses: goreleaser/goreleaser-action@v6
+      uses: goreleaser/goreleaser-action@v7
       with:
         distribution: goreleaser
         version: latest
