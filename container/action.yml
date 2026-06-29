@@ -16,7 +16,10 @@ branding:
 runs:
   using: composite
   steps:
-    - uses: ./common
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
     - id: meta
       name: Collect metadata
