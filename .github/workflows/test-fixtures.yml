@@ -7,39 +7,54 @@ name: Test fixtures
 # Runs each build action against its minimal fixture under testdata/.
 # Triggers on every push (so feature branches self-verify) and on PRs.
 #
-# NOTE: GitHub Actions evaluates a step's `uses` field statically, before
-# the matrix is expanded, so `uses` may NOT contain a dynamic expression
-# such as ${{ matrix.* }}. Each action therefore has its own hardcoded
-# step, gated by an `if` on matrix.action (`if` and `with` do allow it).
+# Each action gets its own job (rather than a matrix) because a step's
+# `uses` field may not contain dynamic expressions, so the action path
+# must be hardcoded anyway.
 on:
   pull_request:
   push:
 
 jobs:
-  test:
+  go:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        action: [go, rust, meson, autotools]
     steps:
       - uses: actions/checkout@v6
-      - if: matrix.action == 'go'
-        uses: ./go
+      - uses: ./go
         with:
           working-directory: testdata/go
-      - if: matrix.action == 'rust'
-        uses: ./rust
+
+  rust:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./rust
         with:
           working-directory: testdata/rust
-      - if: matrix.action == 'meson'
-        uses: ./meson
+
+  meson:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./meson
         with:
           working-directory: testdata/meson
-      - if: matrix.action == 'autotools'
-        uses: ./autotools
+
+  autotools:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./autotools
         with:
           working-directory: testdata/autotools
