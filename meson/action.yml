@@ -61,7 +61,7 @@ runs:
       uses: codecov/codecov-action@v7
       with:
         use_oidc: true
-        # lcov.info (lcov), coverage.txt (cargo-llvm-cov), coverage/.resultset.json
-        files: ./coverage/.resultset.json,lcov.info,coverage.txt
+        # gcovr --lcov writes lcov.info
+        files: lcov.info
         fail_ci_if_error: true
         working-directory: ${{ inputs.working-directory }}
