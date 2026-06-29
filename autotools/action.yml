@@ -33,7 +33,15 @@ runs:
 
     - name: Install coverage tool (lcov)
       shell: bash
-      run: sudo apt-get update -qq && sudo apt-get install -y -qq lcov
+      run: |
+        case "${{ runner.os }}" in
+          Linux)
+            sudo apt-get update -qq && sudo apt-get install -y -qq lcov
+            ;;
+          macOS)
+            brew install lcov
+            ;;
+        esac
 
     - shell: bash
       working-directory: ${{ inputs.working-directory }}
