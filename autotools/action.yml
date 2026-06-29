@@ -41,6 +41,10 @@ runs:
           macOS)
             brew install lcov
             ;;
+          *)
+            echo "Unsupported runner OS for lcov install: ${{ runner.os }}" >&2
+            exit 1
+            ;;
         esac
 
     - shell: bash
