@@ -26,6 +26,13 @@ This repository provides a collection of reusable GitHub Actions workflow templa
 
 Each directory contains an `action.yml` file describing the action or workflow, and some have a `README.md` with further details.
 
+## Release / tagging convention
+
+The release actions (`crate`, `goreleaser`) share a common tagging flow provided by the `tag` action:
+
+- **Stable release** — push to `master`. The `tag` action reads the version from the project file (e.g. `Cargo.toml`) and, if it is a new version, creates the tag automatically; the release action then publishes.
+- **Pre-release** — push a tag like `v1.0.0-rc.1` by hand. The release action publishes that version (driven by the Git ref, since the tag already exists).
+
 ## License
 
 This repository is licensed under the MIT License.
