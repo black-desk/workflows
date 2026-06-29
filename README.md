@@ -12,8 +12,6 @@ This repository provides a collection of reusable GitHub Actions workflow templa
 
 - `autotools/`  — Workflows for autotools (configure/make) projects.
 - `codecov/`    — Report code coverage to Codecov.
-- `commitlint/` — Lint commit messages using conventional commits.
-- `common/`     — Common reusable workflow components.
 - `container/`  — Build and push container images to ghcr.io.
 - `crate/`      — Publish Rust crates to crates.io.
 - `generic/`    — Generic workflows for general automation needs.
@@ -21,16 +19,15 @@ This repository provides a collection of reusable GitHub Actions workflow templa
 - `goreleaser/` — Automatic releases via goreleaser for Go projects.
 - `meson/`      — Workflows for meson projects.
 - `rust/`       — Workflows for Rust projects.
-- `tag/`        — Automatically generate version tags.
 - `testdata/`   — Minimal example projects for end-to-end testing of the build actions.
 
 Each directory contains an `action.yml` file describing the action or workflow, and some have a `README.md` with further details.
 
 ## Release / tagging convention
 
-The release actions (`crate`, `goreleaser`) share a common tagging flow provided by the `tag` action:
+The release actions (`crate`, `goreleaser`) share a common tagging flow (inlined into each release action):
 
-- **Stable release** — push to `master`. The `tag` action reads the version from the project file (e.g. `Cargo.toml`) and, if it is a new version, creates the tag automatically; the release action then publishes.
+- **Stable release** — push to `master`. The release action reads the version from the project file (e.g. `Cargo.toml`) and, if it is a new version, creates the tag automatically, then publishes.
 - **Pre-release** — push a tag like `v1.0.0-rc.1` by hand. The release action publishes that version (driven by the Git ref, since the tag already exists).
 
 ## License
