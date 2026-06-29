@@ -34,12 +34,12 @@ runs:
       uses: ./tag
       id: tag
 
-    - if: steps.tag.outputs.version != ''
+    - if: steps.tag.outputs.version != '' || (github.event_name == 'push' && startsWith(github.ref_name, 'v'))
       name: Authenticate to crates.io via trusted publishing
       uses: rust-lang/crates-io-auth-action@v1
       id: auth
 
-    - if: steps.tag.outputs.version != ''
+    - if: steps.tag.outputs.version != '' || (github.event_name == 'push' && startsWith(github.ref_name, 'v'))
       name: Publish to crates.io
       shell: bash
       run: cargo publish
