@@ -18,7 +18,7 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - uses: black-desk/workflows/common@master
+    - uses: ./common
       with:
         submodules: 'false'
     - name: Lint code with black-desk/clean
@@ -33,4 +33,4 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
     - if: github.event_name == 'pull_request'
       name: Lint commit messages with commitlint
-      uses: black-desk/workflows/commitlint@master
+      uses: ./commitlint

@@ -26,7 +26,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: black-desk/workflows/common@master
+    - uses: ./common
 
     - name: Set up Rust toolchain
       uses: dtolnay/rust-toolchain@stable
@@ -40,6 +40,6 @@ runs:
       run: |
         cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
 
-    - uses: black-desk/workflows/codecov@master
+    - uses: ./codecov
       with:
         working-directory: ${{ inputs.working-directory }}

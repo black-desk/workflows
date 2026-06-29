@@ -26,7 +26,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: black-desk/workflows/common@master
+    - uses: ./common
 
     - name: Install build dependencies
       shell: bash
@@ -54,6 +54,6 @@ runs:
         ninja -C builddir coverage
         gcovr --lcov --root . --output lcov.info builddir
 
-    - uses: black-desk/workflows/codecov@master
+    - uses: ./codecov
       with:
         working-directory: ${{ inputs.working-directory }}

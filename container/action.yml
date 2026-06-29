@@ -16,7 +16,7 @@ branding:
 runs:
   using: composite
   steps:
-    - uses: black-desk/workflows/common@master
+    - uses: ./common
 
     - id: meta
       name: Collect metadata
