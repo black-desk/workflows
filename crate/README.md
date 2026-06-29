@@ -30,6 +30,13 @@ only publish versions of a crate that already exists on the registry:
    project that invokes this action).
 3. **Grant `id-token: write`** to the publishing job (see Permissions above).
 
+## Release flow
+
+This action publishes on two triggers (see the Example):
+
+- **Stable release** — push to `master`. The action reads the version from the project file (e.g. `Cargo.toml`); if it is a new version it creates the tag and publishes automatically.
+- **Pre-release** — push a tag like `v1.0.0-rc.1` by hand. The action publishes that version (the tag already exists, so the tag step is skipped and publishing is driven by the Git ref instead).
+
 ## Example
 
 ``` yaml
