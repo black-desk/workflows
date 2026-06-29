@@ -6,6 +6,11 @@ name: Test fixtures
 
 # Runs each build action against its minimal fixture under testdata/.
 # Triggers on every push (so feature branches self-verify) and on PRs.
+#
+# NOTE: GitHub Actions evaluates a step's `uses` field statically, before
+# the matrix is expanded, so `uses` may NOT contain a dynamic expression
+# such as ${{ matrix.* }}. Each action therefore has its own hardcoded
+# step, gated by an `if` on matrix.action (`if` and `with` do allow it).
 on:
   pull_request:
   push:
@@ -22,7 +27,19 @@ jobs:
         action: [go, rust, meson, autotools]
     steps:
       - uses: actions/checkout@v6
-      - name: Run ${{ matrix.action }} action against its fixture
-        uses: ./${{ matrix.action }}
+      - if: matrix.action == 'go'
+        uses: ./go
         with:
-          working-directory: testdata/${{ matrix.action }}
+          working-directory: testdata/go
+      - if: matrix.action == 'rust'
+        uses: ./rust
+        with:
+          working-directory: testdata/rust
+      - if: matrix.action == 'meson'
+        uses: ./meson
+        with:
+          working-directory: testdata/meson
+      - if: matrix.action == 'autotools'
+        uses: ./autotools
+        with:
+          working-directory: testdata/autotools
