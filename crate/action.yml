@@ -37,7 +37,7 @@ runs:
       name: Generate new version tag if any
       shell: bash
       run: |
-        if [ "${{ runner.debug }}" = "1" ]; then
+        if [ "${{ runner.debug }}" = "1" ] && command -v tree >/dev/null 2>&1; then
           tree
         fi
 
@@ -57,7 +57,7 @@ runs:
           exit 1
         fi
 
-        if git rev-parse "$version" &>/dev/null; then
+        if git rev-parse "refs/tags/$version" &>/dev/null; then
           echo "Tag $version already exists" >&2
           exit
         fi
