@@ -7,40 +7,50 @@ updates:
     - directory: /
       package-ecosystem: github-actions
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
     - directory: autotools
       package-ecosystem: github-actions
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
     - directory: container
       package-ecosystem: github-actions
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
     - directory: crate
       package-ecosystem: github-actions
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
     - directory: generic
       package-ecosystem: github-actions
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
     - directory: go
       package-ecosystem: github-actions
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
     - directory: goreleaser
       package-ecosystem: github-actions
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
     - directory: rust
       package-ecosystem: github-actions
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
     - directory: testdata/go
       package-ecosystem: gomod
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
     - directory: testdata/rust
       package-ecosystem: cargo
       schedule:
-        interval: daily
+        interval: weekly
+        day: sunday
