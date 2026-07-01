@@ -12,6 +12,10 @@ SPDX-License-Identifier: MIT
 contents: write
 ```
 
+## Release flow
+
+This action runs on both the stable and pre-release triggers; see the top-level README for the tagging convention.
+
 ## Example
 
 ``` yaml

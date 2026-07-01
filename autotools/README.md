@@ -25,6 +25,12 @@ Note that this action runs `./configure` with no extra flags, so coverage
 generation must not rely on a `--enable-coverage` configure option — have the
 `test` target produce `lcov.info` on its own.
 
+## Inputs
+
+| Input | Description | Required | Default |
+| --- | --- | --- | --- |
+| `working-directory` | Directory to run the build/test commands in. | no | `.` |
+
 ## Example
 
 ``` yaml
