@@ -13,6 +13,7 @@ name: Test fixtures
 on:
   pull_request:
   push:
+  workflow_dispatch:
 
 jobs:
   go:
