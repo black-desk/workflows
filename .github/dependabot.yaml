@@ -4,6 +4,10 @@
 
 version: 2
 updates:
+    - directory: /
+      package-ecosystem: github-actions
+      schedule:
+        interval: daily
     - directory: autotools
       package-ecosystem: github-actions
       schedule:

@@ -9,6 +9,8 @@ on:
     branches:
       - master
   pull_request:
+  schedule:
+    - cron: '0 0 * * 0' # weekly, catches rotting dependencies
   workflow_dispatch:
 
 jobs:
