@@ -8,18 +8,6 @@ updates:
       package-ecosystem: github-actions
       schedule:
         interval: daily
-    - directory: codecov
-      package-ecosystem: github-actions
-      schedule:
-        interval: daily
-    - directory: commitlint
-      package-ecosystem: github-actions
-      schedule:
-        interval: daily
-    - directory: common
-      package-ecosystem: github-actions
-      schedule:
-        interval: daily
     - directory: container
       package-ecosystem: github-actions
       schedule:
@@ -41,10 +29,6 @@ updates:
       schedule:
         interval: daily
     - directory: rust
-      package-ecosystem: github-actions
-      schedule:
-        interval: daily
-    - directory: tag
       package-ecosystem: github-actions
       schedule:
         interval: daily
