@@ -2,20 +2,28 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: Test fixtures
+name: Continuous integration
 
-# Runs each build action against its minimal fixture under testdata/.
-# Triggers on every push (so feature branches self-verify) and on PRs.
-#
-# Each action gets its own job (rather than a matrix) because a step's
-# `uses` field may not contain dynamic expressions, so the action path
-# must be hardcoded anyway.
 on:
-  pull_request:
   push:
+    branches:
+      - master
+  pull_request:
   workflow_dispatch:
 
 jobs:
+  generic:
+    name: Generic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./generic
+
+  # Each build action runs against its minimal fixture under testdata/. They
+  # are separate jobs (not a matrix) because a step's `uses` field may not
+  # contain dynamic expressions, so the action path must be hardcoded anyway.
   go:
     runs-on: ubuntu-latest
     permissions:
@@ -59,3 +67,14 @@ jobs:
       - uses: ./autotools
         with:
           working-directory: testdata/autotools
+
+  pass:
+    name: pass
+    if: always()
+    needs: [generic, go, rust, meson, autotools]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
