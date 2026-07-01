@@ -44,7 +44,8 @@ on:
       - master
   pull_request:
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: '0 0 * * 0' # weekly, catches rotting dependencies
+  workflow_dispatch:
 
 jobs:
   generic:
@@ -112,6 +113,9 @@ jobs:
 - **Customise without forking.** Pass `working-directory` for monorepo layouts,
   or environment variables (`GO_TAGS`, `VCPKG_ROOT`, …) that your build system
   already reads.
+- **Re-run on demand and on a schedule.** Add `workflow_dispatch` so changes can
+  be verified from the Actions tab without a push/PR, and a weekly `schedule` to
+  catch upstream action updates no PR picked up.
 
 ## Release / tagging convention
 
