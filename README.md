@@ -11,7 +11,6 @@ This repository provides a collection of reusable GitHub Actions workflow templa
 ## Directory Structure
 
 - `autotools/`  — Workflows for autotools (configure/make) projects.
-- `codecov/`    — Report code coverage to Codecov.
 - `container/`  — Build and push container images to ghcr.io.
 - `crate/`      — Publish Rust crates to crates.io.
 - `generic/`    — Generic workflows for general automation needs.
@@ -21,7 +20,7 @@ This repository provides a collection of reusable GitHub Actions workflow templa
 - `rust/`       — Workflows for Rust projects.
 - `testdata/`   — Minimal example projects for end-to-end testing of the build actions.
 
-Each directory contains an `action.yml` file describing the action or workflow, and some have a `README.md` with further details.
+Each action directory contains an `action.yml` file describing the action or workflow, plus a `README.md` with further details. The `testdata/` directory holds the fixtures consumed by the repository's own `test-fixtures` workflow.
 
 ## Release / tagging convention
 

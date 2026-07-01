@@ -6,6 +6,13 @@ SPDX-License-Identifier: MIT
 
 # Build a container image then push to ghcr.io
 
+## Permissions
+
+``` yaml
+contents: read
+packages: write
+```
+
 ## Example
 
 ``` yaml

@@ -13,6 +13,12 @@ contents: write
 id-token: write
 ```
 
+## Inputs
+
+| Input | Description | Required | Default |
+| --- | --- | --- | --- |
+| `working-directory` | Directory to run the build/test commands in. | no | `.` |
+
 ## Example
 
 ``` yaml
