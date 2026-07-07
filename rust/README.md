@@ -18,6 +18,7 @@ id-token: write
 | Input | Description | Required | Default |
 | --- | --- | --- | --- |
 | `working-directory` | Directory to run the build/test commands in. | no | `.` |
+| `cargo-flags` | Flags passed to `cargo`. | no | `--all-features` |
 
 ## Example
 
@@ -37,4 +38,16 @@ jobs:
       id-token: write
     steps:
       - uses: black-desk/workflows/rust@master
+```
+
+## Passing extra flags
+
+Pass any `cargo` flags via the `cargo-flags` input, which defaults to
+`--all-features`.
+
+``` yaml
+steps:
+  - uses: black-desk/workflows/rust@master
+    with:
+      cargo-flags: --no-default-features --features serde,tokio
 ```
