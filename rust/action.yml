@@ -23,6 +23,15 @@ inputs:
     required: false
     default: '.'
 
+  cargo-flags:
+    description: |-
+      Flags passed to `cargo`. Defaults to `--all-features`.
+
+      Pass e.g. `--features serde,tokio` to enable specific features, or
+      `--no-default-features --features foo` to disable the default features.
+    required: false
+    default: '--all-features'
+
 runs:
   using: 'composite'
   steps:
@@ -40,8 +49,15 @@ runs:
     - name: Build and test
       shell: bash
       working-directory: ${{ inputs.working-directory }}
+      env:
+        # Route the input through env rather than interpolating `${{ ... }}`
+        # directly into the script to avoid shell injection.
+        CARGO_FLAGS: ${{ inputs.cargo-flags }}
       run: |
-        cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+        # Split into an array so the flags are passed as separate arguments
+        # (quoted expansion), without word-splitting or globbing side effects.
+        read -ra cargo_flags <<< "$CARGO_FLAGS"
+        cargo llvm-cov "${cargo_flags[@]}" --workspace --lcov --output-path lcov.info
 
     - name: Report code coverage to Codecov
       uses: codecov/codecov-action@v7
