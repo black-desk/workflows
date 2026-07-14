@@ -32,6 +32,15 @@ inputs:
     required: false
     default: "--all-features"
 
+  toolchain:
+    description: |-
+      Rust toolchain channel or version to install (e.g. `stable`, or a precise
+      version like `1.87`). Defaults to `stable`; pass the project's MSRV
+      (`rust-version` in Cargo.toml) to verify it still builds on the minimum
+      supported Rust.
+    required: false
+    default: "stable"
+
 runs:
   using: "composite"
   steps:
@@ -41,7 +50,26 @@ runs:
         submodules: recursive
 
     - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@stable
+      # `@master` (not `@stable`) is required when using the `toolchain` input —
+      # a channel ref like `@stable` would select the channel itself and ignore
+      # the input. See https://github.com/dtolnay/rust-toolchain#readme.
+      uses: dtolnay/rust-toolchain@master
+      with:
+        components: clippy
+        toolchain: ${{ inputs.toolchain }}
+
+    - name: Clippy
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        # Route the input through env rather than interpolating `${{ ... }}`
+        # directly into the script to avoid shell injection.
+        CARGO_FLAGS: ${{ inputs.cargo-flags }}
+      run: |
+        # Split into an array so the flags are passed as separate arguments
+        # (quoted expansion), without word-splitting or globbing side effects.
+        read -ra cargo_flags <<< "$CARGO_FLAGS"
+        cargo clippy "${cargo_flags[@]}" --workspace --all-targets -- -D warnings
 
     - name: Install cargo-llvm-cov
       uses: taiki-e/install-action@cargo-llvm-cov
