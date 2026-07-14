@@ -8,20 +8,20 @@ SPDX-License-Identifier: MIT
 
 ## Permissions
 
-``` yaml
+```yaml
 contents: write
 id-token: write
 ```
 
 ## Inputs
 
-| Input | Description | Required | Default |
-| --- | --- | --- | --- |
-| `working-directory` | Directory to run the build/test commands in. | no | `.` |
+| Input               | Description                                  | Required | Default |
+| ------------------- | -------------------------------------------- | -------- | ------- |
+| `working-directory` | Directory to run the build/test commands in. | no       | `.`     |
 
 ## Example
 
-``` yaml
+```yaml
 name: Continuous integration for master
 
 on:

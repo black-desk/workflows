@@ -12,10 +12,14 @@ consistent.
 
 The following checks run on every trigger:
 
-- **[black-desk/clean](https://github.com/black-desk/clean-action)** — project-specific cleanup / style rules.
-- **[black-desk/up2date](https://github.com/black-desk/up2date-action)** — verifies dependencies are up to date.
-- **[REUSE](https://github.com/fsfe/reuse-action)** — checks [REUSE](https://reuse.software/) compliance for licensing metadata.
-- **[gitleaks](https://github.com/gitleaks/gitleaks-action)** — scans the repository for leaked secrets.
+- **[black-desk/clean](https://github.com/black-desk/clean-action)** —
+  project-specific cleanup / style rules.
+- **[black-desk/up2date](https://github.com/black-desk/up2date-action)** —
+  verifies dependencies are up to date.
+- **[REUSE](https://github.com/fsfe/reuse-action)** — checks
+  [REUSE](https://reuse.software/) compliance for licensing metadata.
+- **[gitleaks](https://github.com/gitleaks/gitleaks-action)** — scans the
+  repository for leaked secrets.
 
 Additionally, on `pull_request` events it lints commit messages with
 [commitlint](https://commitlint.js.org/) using the
@@ -25,7 +29,7 @@ generated on the fly.
 
 ## Example
 
-``` yaml
+```yaml
 name: Continuous integration for master
 
 on:

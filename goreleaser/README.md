@@ -8,17 +8,18 @@ SPDX-License-Identifier: MIT
 
 ## Permissions
 
-``` yaml
+```yaml
 contents: write
 ```
 
 ## Release flow
 
-This action runs on both the stable and pre-release triggers; see the top-level README for the tagging convention.
+This action runs on both the stable and pre-release triggers; see the top-level
+README for the tagging convention.
 
 ## Example
 
-``` yaml
+```yaml
 name: Automatic (pre)release via goreleaser
 
 on:

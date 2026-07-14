@@ -18,11 +18,11 @@ description: |-
 author: Chen Linxuan
 
 branding:
-  icon: 'check-circle'
-  color: 'blue'
+  icon: "check-circle"
+  color: "blue"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - uses: actions/checkout@v7
       with:

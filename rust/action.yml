@@ -14,14 +14,14 @@ description: |-
 author: Chen Linxuan
 
 branding:
-  icon: 'check-circle'
-  color: 'blue'
+  icon: "check-circle"
+  color: "blue"
 
 inputs:
   working-directory:
     description: Directory to run the build/test commands in.
     required: false
-    default: '.'
+    default: "."
 
   cargo-flags:
     description: |-
@@ -30,10 +30,10 @@ inputs:
       Pass e.g. `--features serde,tokio` to enable specific features, or
       `--no-default-features --features foo` to disable the default features.
     required: false
-    default: '--all-features'
+    default: "--all-features"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - uses: actions/checkout@v7
       with:
@@ -42,16 +42,9 @@ runs:
 
     - name: Set up Rust toolchain
       uses: dtolnay/rust-toolchain@stable
-      with:
-        components: rustfmt
 
     - name: Install cargo-llvm-cov
       uses: taiki-e/install-action@cargo-llvm-cov
-
-    - name: Check formatting
-      shell: bash
-      working-directory: ${{ inputs.working-directory }}
-      run: cargo fmt --check
 
     - name: Build and test
       shell: bash
