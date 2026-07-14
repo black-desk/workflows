@@ -20,6 +20,11 @@ id-token: write
 | `working-directory` | Directory to run the build/test commands in. | no | `.` |
 | `cargo-flags` | Flags passed to `cargo`. | no | `--all-features` |
 
+## Checks
+
+The action installs `rustfmt`, runs `cargo fmt --check`, then runs tests and
+coverage with `cargo llvm-cov`.
+
 ## Example
 
 ``` yaml
