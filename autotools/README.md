@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 
 ## Permissions
 
-``` yaml
+```yaml
 contents: write
 id-token: write
 ```
@@ -16,8 +16,8 @@ id-token: write
 ## Coverage
 
 This action uploads coverage to Codecov after testing. Codecov looks for
-`lcov.info` at the repository root, so your `make test` target must generate
-it there, typically by collecting gcov data with `lcov`:
+`lcov.info` at the repository root, so your `make test` target must generate it
+there, typically by collecting gcov data with `lcov`:
 
     lcov --capture --directory . --output-file lcov.info
 
@@ -27,13 +27,13 @@ generation must not rely on a `--enable-coverage` configure option — have the
 
 ## Inputs
 
-| Input | Description | Required | Default |
-| --- | --- | --- | --- |
-| `working-directory` | Directory to run the build/test commands in. | no | `.` |
+| Input               | Description                                  | Required | Default |
+| ------------------- | -------------------------------------------- | -------- | ------- |
+| `working-directory` | Directory to run the build/test commands in. | no       | `.`     |
 
 ## Example
 
-``` yaml
+```yaml
 name: Continuous integration for master
 
 on:

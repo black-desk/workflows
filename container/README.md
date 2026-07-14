@@ -8,14 +8,14 @@ SPDX-License-Identifier: MIT
 
 ## Permissions
 
-``` yaml
+```yaml
 contents: read
 packages: write
 ```
 
 ## Example
 
-``` yaml
+```yaml
 name: Continuous integration for master
 
 on:

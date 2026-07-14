@@ -8,26 +8,21 @@ SPDX-License-Identifier: MIT
 
 ## Permissions
 
-``` yaml
+```yaml
 contents: write
 id-token: write
 ```
 
 ## Inputs
 
-| Input | Description | Required | Default |
-| --- | --- | --- | --- |
-| `working-directory` | Directory to run the build/test commands in. | no | `.` |
-| `cargo-flags` | Flags passed to `cargo`. | no | `--all-features` |
-
-## Checks
-
-The action installs `rustfmt`, runs `cargo fmt --check`, then runs tests and
-coverage with `cargo llvm-cov`.
+| Input               | Description                                  | Required | Default          |
+| ------------------- | -------------------------------------------- | -------- | ---------------- |
+| `working-directory` | Directory to run the build/test commands in. | no       | `.`              |
+| `cargo-flags`       | Flags passed to `cargo`.                     | no       | `--all-features` |
 
 ## Example
 
-``` yaml
+```yaml
 name: Continuous integration for master
 
 on:
@@ -50,7 +45,7 @@ jobs:
 Pass any `cargo` flags via the `cargo-flags` input, which defaults to
 `--all-features`.
 
-``` yaml
+```yaml
 steps:
   - uses: black-desk/workflows/rust@master
     with:
