@@ -27,6 +27,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - name: Set up shared format config
+        run: |
+          ln -s .format/.clang-format .clang-format
+          ln -s .format/.editorconfig .editorconfig
+          ln -s .format/.prettierrc .prettierrc
       - uses: ./format
 
   # Each build action runs against its minimal fixture under testdata/. They
