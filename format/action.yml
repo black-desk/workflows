@@ -71,6 +71,20 @@ runs:
         npm install --global prettier
         python -m pip install --upgrade black
 
+    - name: Define tracked file discovery helper
+      shell: bash
+      run: |
+        cat > "$RUNNER_TEMP/tracked-files.sh" <<'EOF'
+        tracked_regular_files() {
+          git ls-files -z -- "$@" |
+            while IFS= read -r -d '' file; do
+              if [ -f "$file" ] && [ ! -L "$file" ]; then
+                printf '%s\0' "$file"
+              fi
+            done
+        }
+        EOF
+
     - name: Check Rust formatting
       shell: bash
       working-directory: ${{ inputs.working-directory }}
@@ -83,7 +97,8 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        mapfile -d '' files < <(git ls-files -z -- '*.go')
+        source "$RUNNER_TEMP/tracked-files.sh"
+        mapfile -d '' files < <(tracked_regular_files '*.go')
         if ((${#files[@]})); then
           unformatted="$(gofmt -l "${files[@]}")"
           if [ -n "$unformatted" ]; then
@@ -116,7 +131,8 @@ runs:
           fi
         done <<< "$CLANG_FORMAT_EXTRA_PATTERNS"
 
-        mapfile -d '' files < <(git ls-files -z -- "${patterns[@]}")
+        source "$RUNNER_TEMP/tracked-files.sh"
+        mapfile -d '' files < <(tracked_regular_files "${patterns[@]}")
         if ((${#files[@]})); then
           clang-format --style=file --fallback-style=none --dry-run --Werror "${files[@]}"
         fi
@@ -125,7 +141,8 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        mapfile -d '' files < <(git ls-files -z -- '*.py' '*.pyi')
+        source "$RUNNER_TEMP/tracked-files.sh"
+        mapfile -d '' files < <(tracked_regular_files '*.py' '*.pyi')
         if ((${#files[@]})); then
           if [ -f .black.toml ]; then
             black --config .black.toml --check --diff "${files[@]}"
@@ -166,8 +183,9 @@ runs:
           exit 0
         fi
 
+        source "$RUNNER_TEMP/tracked-files.sh"
         mapfile -d '' files < <(
-          git ls-files -z -- \
+          tracked_regular_files \
             '*.css' \
             '*.graphql' \
             '*.html' \
