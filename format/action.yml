@@ -102,7 +102,10 @@ runs:
         if ((${#files[@]})); then
           unformatted="$(gofmt -l "${files[@]}")"
           if [ -n "$unformatted" ]; then
-            echo "$unformatted"
+            echo "::error::The following Go files are not formatted. Run \`gofmt -w\` on them:"
+            while IFS= read -r file; do
+              [ -n "$file" ] && echo "::error file=$file::Not formatted (run \`gofmt -w $file\`)"
+            done <<< "$unformatted"
             exit 1
           fi
         fi
@@ -134,7 +137,17 @@ runs:
         source "$RUNNER_TEMP/tracked-files.sh"
         mapfile -d '' files < <(tracked_regular_files "${patterns[@]}")
         if ((${#files[@]})); then
-          clang-format --style=file --fallback-style=none --dry-run --Werror "${files[@]}"
+          failed=0
+          for file in "${files[@]}"; do
+            if ! out="$(clang-format --style=file --fallback-style=none --dry-run --Werror "$file" 2>&1)"; then
+              echo "::error file=$file::Not formatted (run \`clang-format -i $file\`)"
+              printf '%s\n' "$out"
+              failed=1
+            fi
+          done
+          if [ "$failed" = 1 ]; then
+            exit 1
+          fi
         fi
 
     - name: Check Python formatting
@@ -144,12 +157,27 @@ runs:
         source "$RUNNER_TEMP/tracked-files.sh"
         mapfile -d '' files < <(tracked_regular_files '*.py' '*.pyi')
         if ((${#files[@]})); then
+          black_args=(--check --diff)
           if [ -f .black.toml ]; then
-            black --config .black.toml --check --diff "${files[@]}"
+            black_args+=(--config .black.toml)
           elif [ -f pyproject.toml ]; then
-            black --check --diff "${files[@]}"
+            :
           else
             echo "Skipping Black: no .black.toml or pyproject.toml found"
+            black_args=()
+          fi
+          if ((${#black_args[@]})); then
+            if ! out="$(black "${black_args[@]}" "${files[@]}" 2>&1)"; then
+              echo "::error::Black found formatting issues. See diff above."
+              printf '%s\n' "$out"
+              while IFS= read -r line; do
+                if [[ "$line" == "would reformat "* ]]; then
+                  file="${line#would reformat }"
+                  [ -f "$file" ] && echo "::error file=$file::Not formatted (run \`black $file\`)"
+                fi
+              done <<< "$out"
+              exit 1
+            fi
           fi
         fi
 
@@ -205,5 +233,12 @@ runs:
             '*.yml'
         )
         if ((${#files[@]})); then
-          prettier --check --ignore-unknown "${files[@]}"
+          if ! unformatted="$(prettier --list-different --ignore-unknown "${files[@]}" 2>&1)"; then
+            printf '%s\n' "$unformatted"
+            echo "::error::Prettier reported issues. See output above; run \`prettier --write\` on the listed files."
+            while IFS= read -r file; do
+              [ -n "$file" ] && [ -f "$file" ] && echo "::error file=$file::Not formatted (run \`prettier --write $file\`)"
+            done <<< "$unformatted"
+            exit 1
+          fi
         fi

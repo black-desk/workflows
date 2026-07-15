@@ -42,7 +42,7 @@ runs:
             brew install lcov
             ;;
           *)
-            echo "Unsupported runner OS for lcov install: ${{ runner.os }}" >&2
+            echo "::error::Unsupported runner OS for lcov install: ${{ runner.os }}"
             exit 1
             ;;
         esac
@@ -51,15 +51,21 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         if [ -f configure ]; then
+          echo "::group::./configure"
           ./configure
+          echo "::endgroup::"
         else
-          echo >&2 "'configure' script not found. Skipping configuration step"
+          echo "'configure' script not found. Skipping configuration step"
         fi
+        echo "::group::make"
         make
+        echo "::endgroup::"
         if make -n test &>/dev/null; then
+          echo "::group::make test"
           make test
+          echo "::endgroup::"
         else
-          echo >&2 "'test' target not found. Skipping testing"
+          echo "'test' target not found. Skipping testing"
         fi
 
     - name: Report code coverage to Codecov

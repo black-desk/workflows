@@ -41,7 +41,7 @@ runs:
           exit
         fi
 
-        echo "No Dockerfile or Containerfile found."
+        echo "::error::No Dockerfile or Containerfile found. Create one in the repository root."
         exit 1
 
     - name: Login to GitHub Container Registry

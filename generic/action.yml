@@ -41,7 +41,9 @@ runs:
       name: Lint commit messages with commitlint
       shell: bash
       run: |
+        echo "::group::Install commitlint"
         npm install -g @commitlint/cli @commitlint/config-conventional
+        echo "::endgroup::"
 
         FROM="${{ github.event.push.before }}"
         TO="${{ github.event.push.after }}"
@@ -52,10 +54,12 @@ runs:
         fi
 
         if [ -z "$FROM" ]; then
+          echo "::error::Could not determine the commit range start (github.event.push.before / pull_request.base.sha). Aborting commitlint."
           exit 1
         fi
 
         if [ -z "$TO" ]; then
+          echo "::error::Could not determine the commit range end (github.event.push.after / pull_request.head.sha). Aborting commitlint."
           exit 1
         fi
 
