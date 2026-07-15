@@ -47,18 +47,21 @@ runs:
         fi
 
         if [ -f "$script" ]; then
-          echo "Using script: $script" >&2
+          echo "Using script: $script"
           version="$("$script")"
         elif [ -f "Cargo.lock" ]; then
-          echo "Using cargo to get version" >&2
-          version=v"$(cargo pkgid | awk -F'[#@]' '{print $NF}')"
+          echo "Using cargo to get version"
+          if ! version="v$(cargo pkgid | awk -F'[#@]' '{print $NF}')"; then
+            echo "::error::Failed to parse version from \`cargo pkgid\`. In a workspace, ensure there is a single root package or provide ./scripts/get-project-version.sh."
+            exit 1
+          fi
         else
-          echo "Failed to determine project version" >&2
+          echo "::error::Failed to determine project version. Tried ./scripts/get-project-version.sh, ./tools/get-project-version.sh, and Cargo.lock."
           exit 1
         fi
 
         if git rev-parse "refs/tags/$version" &>/dev/null; then
-          echo "Tag $version already exists" >&2
+          echo "Tag $version already exists"
           exit
         fi
 

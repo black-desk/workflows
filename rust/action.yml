@@ -69,7 +69,9 @@ runs:
         # Split into an array so the flags are passed as separate arguments
         # (quoted expansion), without word-splitting or globbing side effects.
         read -ra cargo_flags <<< "$CARGO_FLAGS"
+        echo "::group::cargo clippy"
         cargo clippy "${cargo_flags[@]}" --workspace --all-targets -- -D warnings
+        echo "::endgroup::"
 
     - name: Install cargo-llvm-cov
       uses: taiki-e/install-action@cargo-llvm-cov
