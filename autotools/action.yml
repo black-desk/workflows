@@ -36,10 +36,14 @@ runs:
       run: |
         case "${{ runner.os }}" in
           Linux)
+            echo "::group::Install lcov via apt"
             sudo apt-get update -qq && sudo apt-get install -y -qq lcov
+            echo "::endgroup::"
             ;;
           macOS)
+            echo "::group::Install lcov via brew"
             brew install lcov
+            echo "::endgroup::"
             ;;
           *)
             echo "::error::Unsupported runner OS for lcov install: ${{ runner.os }}"

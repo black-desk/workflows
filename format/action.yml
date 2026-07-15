@@ -67,9 +67,15 @@ runs:
       env:
         CLANG_FORMAT_VERSION: ${{ inputs.clang-format-version }}
       run: |
+        echo "::group::Install clang-format"
         python -m pip install --upgrade "clang-format==${CLANG_FORMAT_VERSION}"
+        echo "::endgroup::"
+        echo "::group::Install Prettier"
         npm install --global prettier
+        echo "::endgroup::"
+        echo "::group::Install Black"
         python -m pip install --upgrade black
+        echo "::endgroup::"
 
     - name: Define tracked file discovery helper
       shell: bash

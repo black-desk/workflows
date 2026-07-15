@@ -33,7 +33,10 @@ runs:
 
     - name: Install build dependencies
       shell: bash
-      run: pip install meson ninja gcovr
+      run: |
+        echo "::group::Install meson, ninja, gcovr"
+        pip install meson ninja gcovr
+        echo "::endgroup::"
 
     - name: Setup build directory
       shell: bash
