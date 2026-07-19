@@ -34,7 +34,7 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
     - if: github.event_name == 'pull_request'
       name: Set up Node for commitlint
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: lts/*
     - if: github.event_name == 'pull_request'
