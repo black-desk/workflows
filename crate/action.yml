@@ -21,6 +21,15 @@ branding:
   icon: "check-circle"
   color: "blue"
 
+inputs:
+  working-directory:
+    description: |-
+      Directory containing the project to publish (where `Cargo.toml` lives).
+      Defaults to the repository root. Set this for a non-root package in a
+      workspace.
+    required: false
+    default: "."
+
 runs:
   using: "composite"
   steps:
@@ -35,6 +44,7 @@ runs:
     - if: github.event_name == 'push'
       id: tag
       name: Generate new version tag if any
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
         if [ "${{ runner.debug }}" = "1" ] && command -v tree >/dev/null 2>&1; then
@@ -75,6 +85,7 @@ runs:
 
     - if: steps.tag.outputs.version != '' || (github.event_name == 'push' && startsWith(github.ref_name, 'v'))
       name: Publish to crates.io
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: cargo publish
       env:
