@@ -61,12 +61,17 @@ runs:
     - name: Verify Cargo.lock is up to date
       # Fail fast if Cargo.lock lags behind Cargo.toml — e.g. a version bump
       # that wasn't followed by `cargo build`/`cargo update` to refresh it.
-      # `--locked` makes cargo refuse to rewrite the lockfile and exit non-zero
-      # instead, surfacing the problem at PR time rather than silently making a
-      # release action read the stale version.
+      # `cargo metadata --locked` refuses to rewrite the lockfile and exits
+      # non-zero, surfacing the problem at PR time rather than letting a
+      # release action read the stale version. Only enforced when a lockfile
+      # is committed — `--locked` also refuses to create one, which would
+      # false-positive on crates that don't commit a lockfile (e.g. libraries).
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: cargo metadata --locked --format-version 1 >/dev/null
+      run: |
+        if git ls-files -- Cargo.lock '*/Cargo.lock' | grep -q .; then
+          cargo metadata --locked --format-version 1 >/dev/null
+        fi
 
     - name: Clippy
       shell: bash
