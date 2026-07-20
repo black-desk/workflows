@@ -78,12 +78,12 @@ runs:
         git tag "$version"
         echo version="$version" >> $GITHUB_OUTPUT
 
-    - if: steps.tag.outputs.version != '' || (github.event_name == 'push' && startsWith(github.ref_name, 'v'))
+    - if: steps.tag.outputs.version != ''
       name: Authenticate to crates.io via trusted publishing
       uses: rust-lang/crates-io-auth-action@v1
       id: auth
 
-    - if: steps.tag.outputs.version != '' || (github.event_name == 'push' && startsWith(github.ref_name, 'v'))
+    - if: steps.tag.outputs.version != ''
       name: Publish to crates.io
       working-directory: ${{ inputs.working-directory }}
       shell: bash
