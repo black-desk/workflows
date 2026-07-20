@@ -16,6 +16,15 @@ branding:
   icon: "check-circle"
   color: "blue"
 
+inputs:
+  working-directory:
+    description: |-
+      Directory containing the project to release (where `Cargo.toml` and
+      `.goreleaser.yaml` live). Defaults to the repository root. Set this for
+      a non-root package in a workspace.
+    required: false
+    default: "."
+
 runs:
   using: "composite"
   steps:
@@ -40,6 +49,7 @@ runs:
     - if: github.event_name == 'push'
       id: tag
       name: Generate new version tag if any
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
         if [ "${{ runner.debug }}" = "1" ] && command -v tree >/dev/null 2>&1; then
@@ -79,6 +89,7 @@ runs:
         distribution: goreleaser
         version: latest
         args: release --clean
+        workdir: ${{ inputs.working-directory }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         CUSTOM_TAG: ${{ steps.tag.outputs.version }}
@@ -89,5 +100,6 @@ runs:
         distribution: goreleaser
         version: latest
         args: release --clean
+        workdir: ${{ inputs.working-directory }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
