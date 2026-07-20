@@ -58,6 +58,16 @@ runs:
         components: clippy
         toolchain: ${{ inputs.toolchain }}
 
+    - name: Verify Cargo.lock is up to date
+      # Fail fast if Cargo.lock lags behind Cargo.toml — e.g. a version bump
+      # that wasn't followed by `cargo build`/`cargo update` to refresh it.
+      # `--locked` makes cargo refuse to rewrite the lockfile and exit non-zero
+      # instead, surfacing the problem at PR time rather than silently making a
+      # release action read the stale version.
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: cargo metadata --locked --format-version 1 >/dev/null
+
     - name: Clippy
       shell: bash
       working-directory: ${{ inputs.working-directory }}
