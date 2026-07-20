@@ -59,14 +59,14 @@ runs:
         if [ -f "$script" ]; then
           echo "Using script: $script"
           version="$("$script")"
-        elif [ -f "Cargo.lock" ]; then
+        elif [ -f "Cargo.toml" ]; then
           echo "Using cargo to get version"
           if ! version="v$(cargo pkgid | awk -F'[#@]' '{print $NF}')"; then
             echo "::error::Failed to parse version from \`cargo pkgid\`. In a workspace, ensure there is a single root package or provide ./scripts/get-project-version.sh."
             exit 1
           fi
         else
-          echo "::error::Failed to determine project version. Tried ./scripts/get-project-version.sh, ./tools/get-project-version.sh, and Cargo.lock."
+          echo "::error::Failed to determine project version. Tried ./scripts/get-project-version.sh, ./tools/get-project-version.sh, and Cargo.toml."
           exit 1
         fi
 
