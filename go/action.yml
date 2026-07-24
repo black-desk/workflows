@@ -42,7 +42,10 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        go test ./... -coverprofile=coverage.txt
+        go test ./... -coverprofile=coverage.txt || {
+          echo "::error::Go build or tests failed. See the compiler/test output above for details."
+          exit 1
+        }
 
     - name: Report code coverage to Codecov
       uses: codecov/codecov-action@v7

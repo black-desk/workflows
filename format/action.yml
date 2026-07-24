@@ -96,7 +96,10 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         if [ -f Cargo.toml ]; then
-          cargo fmt --check
+          cargo fmt --check || {
+            echo "::error::Rust code is not formatted. Run \`cargo fmt\` to fix."
+            exit 1
+          }
         fi
 
     - name: Check Go formatting

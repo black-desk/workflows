@@ -41,17 +41,29 @@ runs:
     - name: Setup build directory
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: meson setup builddir -Db_coverage=true
+      run: |
+        meson setup builddir -Db_coverage=true || {
+          echo "::error::\`meson setup\` failed. Check the meson output above for missing dependencies or configuration errors."
+          exit 1
+        }
 
     - name: Compile
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: meson compile -C builddir
+      run: |
+        meson compile -C builddir || {
+          echo "::error::Compilation failed. See the compiler errors above for the failing source file and line."
+          exit 1
+        }
 
     - name: Test
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: meson test -C builddir -v
+      run: |
+        meson test -C builddir -v || {
+          echo "::error::Tests failed. See the test output above for the failing test case."
+          exit 1
+        }
 
     - name: Generate coverage report
       shell: bash

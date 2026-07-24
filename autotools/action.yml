@@ -56,17 +56,17 @@ runs:
       run: |
         if [ -f configure ]; then
           echo "::group::./configure"
-          ./configure
+          ./configure || { echo "::error::\`./configure\` failed. Check the configure output above for missing dependencies or errors."; exit 1; }
           echo "::endgroup::"
         else
           echo "'configure' script not found. Skipping configuration step"
         fi
         echo "::group::make"
-        make
+        make || { echo "::error::\`make\` failed. See the compiler/build errors above for the failing source file and line."; exit 1; }
         echo "::endgroup::"
         if make -n test &>/dev/null; then
           echo "::group::make test"
-          make test
+          make test || { echo "::error::Tests failed. See the test output above for the failing test case."; exit 1; }
           echo "::endgroup::"
         else
           echo "'test' target not found. Skipping testing"

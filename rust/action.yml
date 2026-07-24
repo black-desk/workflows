@@ -85,7 +85,10 @@ runs:
         # (quoted expansion), without word-splitting or globbing side effects.
         read -ra cargo_flags <<< "$CARGO_FLAGS"
         echo "::group::cargo clippy"
-        cargo clippy "${cargo_flags[@]}" --workspace --all-targets -- -D warnings
+        cargo clippy "${cargo_flags[@]}" --workspace --all-targets -- -D warnings || {
+          echo "::error::Clippy reported warnings. Fix them above, run \`cargo clippy --fix\` to auto-fix, or add \`#[allow(...)]\` for intentional lints."
+          exit 1
+        }
         echo "::endgroup::"
 
     - name: Install cargo-llvm-cov
@@ -102,7 +105,10 @@ runs:
         # Split into an array so the flags are passed as separate arguments
         # (quoted expansion), without word-splitting or globbing side effects.
         read -ra cargo_flags <<< "$CARGO_FLAGS"
-        cargo llvm-cov "${cargo_flags[@]}" --workspace --lcov --output-path lcov.info
+        cargo llvm-cov "${cargo_flags[@]}" --workspace --lcov --output-path lcov.info || {
+          echo "::error::Build or tests failed. See the compiler/test output above for the failing file and line."
+          exit 1
+        }
 
     - name: Report code coverage to Codecov
       uses: codecov/codecov-action@v7

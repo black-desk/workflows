@@ -63,8 +63,13 @@ runs:
           exit 1
         fi
 
+        commitlint_error() {
+          echo "::error::Commit message(s) do not follow Conventional Commits. Expected format: \`type(scope): description\` (e.g. \`feat: add X\`, \`fix: resolve Y\`). Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert. See https://conventionalcommits.org"
+          exit 1
+        }
+
         if commitlint --last &>/dev/null; then
-          commitlint --verbose --from "$FROM" --to "$TO"
+          commitlint --verbose --from "$FROM" --to "$TO" || commitlint_error
           exit
         fi
 
@@ -79,4 +84,4 @@ runs:
         }
         EOF
 
-        commitlint --verbose --from "$FROM" --to "$TO" --config "$CONFIG"
+        commitlint --verbose --from "$FROM" --to "$TO" --config "$CONFIG" || commitlint_error
