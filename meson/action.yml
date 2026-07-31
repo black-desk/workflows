@@ -23,6 +23,14 @@ inputs:
     required: false
     default: "."
 
+  upload-coverage:
+    description: |-
+      Whether to upload coverage to Codecov. Defaults to `true`; set to
+      `false` to skip the upload step entirely (e.g. for a private repository
+      that has not been linked on Codecov yet).
+    required: false
+    default: "true"
+
 runs:
   using: "composite"
   steps:
@@ -73,6 +81,7 @@ runs:
         gcovr --lcov --root . --output lcov.info builddir
 
     - name: Report code coverage to Codecov
+      if: ${{ inputs.upload-coverage != 'false' }}
       uses: codecov/codecov-action@v7
       with:
         use_oidc: true
