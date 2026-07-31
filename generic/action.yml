@@ -15,6 +15,16 @@ branding:
   icon: "check-circle"
   color: "blue"
 
+inputs:
+  gitleaks:
+    description: |-
+      Whether to run gitleaks secret scanning. Defaults to `true`; set to
+      `false` to skip it entirely (e.g. for a private repository that has not
+      configured the gitleaks GitHub App, which fails with "Resource not
+      accessible by integration").
+    required: false
+    default: "true"
+
 runs:
   using: "composite"
   steps:
@@ -29,6 +39,7 @@ runs:
     - name: Lint code with REUSE
       uses: fsfe/reuse-action@v6
     - name: Lint code with gitleaks
+      if: ${{ inputs.gitleaks != 'false' }}
       uses: gitleaks/gitleaks-action@v3
       env:
         GITHUB_TOKEN: ${{ github.token }}
