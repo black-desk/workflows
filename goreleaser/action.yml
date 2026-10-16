@@ -84,6 +84,18 @@ runs:
           exit 1
         fi
 
+        # SemVer 2.0.0 (https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string)
+        # Split the regex into components for readability. Numeric identifiers
+        # must not have leading zeros; build metadata may contain them.
+        number='(0|[1-9][0-9]*)'
+        prerelease='(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)'
+        build='[0-9a-zA-Z-]+'
+        semver="^v${number}\.${number}\.${number}(-${prerelease}(\.${prerelease})*)?(\+${build}(\.${build})*)?$"
+        if [[ ! "$version" =~ $semver ]]; then
+          echo "::error::Project version must be a v-prefixed SemVer 2.0.0 tag (for example v1.2.3 or v1.2.3-rc.1)."
+          exit 1
+        fi
+
         if [ "$PUBLISH_CRATE" = "true" ]; then
           crate_version="v$(cargo pkgid --locked | awk -F'[#@]' '{print $NF}')"
           if [ "$version" != "$crate_version" ]; then
