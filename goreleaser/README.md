@@ -12,12 +12,22 @@ SPDX-License-Identifier: MIT
 contents: write
 ```
 
+## Project setup
+
+`working-directory` defaults to `.` and selects the directory containing the
+GoReleaser configuration and version script or Cargo package. For Go projects,
+Go is installed when that directory contains `go.mod`; its dependency/build
+cache is enabled only when `go.sum` also exists there.
+
+Version scripts must print the complete tag, such as `v0.3.4` or `v0.3.4-rc.1`,
+to stdout. The Cargo fallback adds the `v` prefix automatically.
+
 ## Release flow
 
 On a branch push, the action reads the project version using
 `./scripts/get-project-version.sh`, `./tools/get-project-version.sh`, or
 `cargo pkgid --locked`. It creates and pushes that tag before running
-GoReleaser. An existing tag at an earlier commit skips the release; an existing
+GoReleaser. An existing tag at a different commit skips the release; an existing
 tag at the current commit allows a failed release to be retried. Tags are never
 overwritten.
 
@@ -78,6 +88,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   goreleaser:
     permissions:
@@ -112,5 +126,6 @@ jobs:
           publish-crate: "true"
 ```
 
-The caller must gate this job on CI success for the same commit; the trigger
-example above does not itself provide that gate.
+The caller must gate release jobs on CI success for the same commit; these
+trigger examples do not themselves provide that gate. Branch protection that
+requires PR checks does not make a separate CD workflow wait for push CI.

@@ -9,7 +9,7 @@ description: |-
 
   This action requires following permissions:
     contents: write
-    id-token: write (only when publish-crate is enabled)
+    id-token: write # (only when publish-crate is enabled)
 
 author: Chen Linxuan
 
@@ -20,9 +20,9 @@ branding:
 inputs:
   working-directory:
     description: |-
-      Directory containing the project to release (where `Cargo.toml` and
-      `.goreleaser.yaml` live). Defaults to the repository root. Set this for
-      a non-root package in a workspace.
+      Directory containing the GoReleaser configuration and project version
+      script or Cargo package. Defaults to the repository root. Cargo
+      publication, when enabled, uses the package in this same directory.
     required: false
     default: "."
 
@@ -94,7 +94,7 @@ runs:
 
         if git show-ref --verify --quiet "refs/tags/$version"; then
           if [ "$(git rev-parse "refs/tags/$version^{commit}")" != "$(git rev-parse HEAD)" ]; then
-            echo "Tag $version already exists at an earlier commit; skipping release."
+            echo "Tag $version already exists at a different commit; skipping release."
             exit 0
           fi
           echo "Tag $version already exists at this commit; retrying release."
@@ -128,6 +128,10 @@ runs:
         version="$(jq -r '.version' <<< "$package")"
         response="$(mktemp)"
         trap 'rm -f "$response"' EXIT
+        # cargo info fails both when a version is absent and when the registry
+        # cannot be reached; its exit status cannot distinguish those cases.
+        # Query the API so only HTTP 404 means unpublished. Other errors must
+        # fail the job rather than trigger publication after a failed lookup.
         status="$(curl --silent --show-error --location --retry 3 \
           --user-agent black-desk-workflows-goreleaser \
           --output "$response" --write-out '%{http_code}' \
