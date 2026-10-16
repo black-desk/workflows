@@ -5,10 +5,11 @@
 name: Automatic release via goreleaser
 
 description: |-
-  A GitHub Action for continuous integration of my personal golang projects.
+  Release Go and Rust projects with GoReleaser, optionally publishing to crates.io.
 
   This action requires following permissions:
     contents: write
+    id-token: write (only when publish-crate is enabled)
 
 author: Chen Linxuan
 
@@ -25,6 +26,11 @@ inputs:
     required: false
     default: "."
 
+  publish-crate:
+    description: Publish the Cargo package to crates.io using Trusted Publishing after GoReleaser succeeds.
+    required: false
+    default: "false"
+
 runs:
   using: "composite"
   steps:
@@ -40,19 +46,22 @@ runs:
       uses: mlugg/setup-zig@v2
 
     - name: Set up Go
+      if: hashFiles(format('{0}/go.mod', inputs.working-directory)) != ''
       uses: actions/setup-go@v7
       with:
         go-version: stable
-        cache: true
-        cache-dependency-path: ${{ github.workspace }}/go.sum
+        cache: ${{ hashFiles(format('{0}/go.sum', inputs.working-directory)) != '' }}
+        cache-dependency-path: ${{ github.workspace }}/${{ inputs.working-directory }}/go.sum
 
-    - if: github.event_name == 'push'
+    - if: github.event_name == 'push' && github.ref_type == 'branch'
       id: tag
       name: Generate new version tag if any
       working-directory: ${{ inputs.working-directory }}
       shell: bash
+      env:
+        PUBLISH_CRATE: ${{ inputs.publish-crate }}
       run: |
-        if [ "${{ runner.debug }}" = "1" ] && command -v tree >/dev/null 2>&1; then
+        if [ "${RUNNER_DEBUG:-}" = "1" ] && command -v tree >/dev/null 2>&1; then
           tree
         fi
 
@@ -66,7 +75,7 @@ runs:
           version="$("$script")"
         elif [ -f "Cargo.toml" ]; then
           echo "Using cargo to get version"
-          if ! version="v$(cargo pkgid | awk -F'[#@]' '{print $NF}')"; then
+          if ! version="v$(cargo pkgid --locked | awk -F'[#@]' '{print $NF}')"; then
             echo "::error::Failed to parse version from \`cargo pkgid\`. In a workspace, ensure there is a single root package or provide ./scripts/get-project-version.sh."
             exit 1
           fi
@@ -75,13 +84,25 @@ runs:
           exit 1
         fi
 
-        if git rev-parse "refs/tags/$version" &>/dev/null; then
-          echo "Tag $version already exists"
-          exit
+        if [ "$PUBLISH_CRATE" = "true" ]; then
+          crate_version="v$(cargo pkgid --locked | awk -F'[#@]' '{print $NF}')"
+          if [ "$version" != "$crate_version" ]; then
+            echo "::error::Release tag must match Cargo package version $crate_version."
+            exit 1
+          fi
         fi
 
-        git tag "$version"
-        echo version="$version" >> $GITHUB_OUTPUT
+        if git show-ref --verify --quiet "refs/tags/$version"; then
+          if [ "$(git rev-parse "refs/tags/$version^{commit}")" != "$(git rev-parse HEAD)" ]; then
+            echo "Tag $version already exists at an earlier commit; skipping release."
+            exit 0
+          fi
+          echo "Tag $version already exists at this commit; retrying release."
+        else
+          git tag "$version"
+        fi
+        git push origin "refs/tags/$version"
+        echo "version=$version" >> "$GITHUB_OUTPUT"
 
     - if: steps.tag.outputs.version != ''
       uses: goreleaser/goreleaser-action@v7
@@ -94,12 +115,41 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         CUSTOM_TAG: ${{ steps.tag.outputs.version }}
 
-    - if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
-      uses: goreleaser/goreleaser-action@v7
-      with:
-        distribution: goreleaser
-        version: latest
-        args: release --clean
-        workdir: ${{ inputs.working-directory }}
+    - if: inputs.publish-crate == 'true' && steps.tag.outputs.version != ''
+      id: crate
+      name: Check whether the Cargo package is already published
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: |
+        metadata="$(cargo metadata --locked --no-deps --format-version 1)"
+        package="$(jq -ce --arg manifest "$(pwd -P)/Cargo.toml" \
+          '[.packages[] | select(.manifest_path == $manifest)] | if length == 1 then .[0] else error("Select a single Cargo package using working-directory") end' <<< "$metadata")"
+        name="$(jq -r '.name' <<< "$package")"
+        version="$(jq -r '.version' <<< "$package")"
+        response="$(mktemp)"
+        trap 'rm -f "$response"' EXIT
+        status="$(curl --silent --show-error --location --retry 3 \
+          --user-agent black-desk-workflows-goreleaser \
+          --output "$response" --write-out '%{http_code}' \
+          "https://crates.io/api/v1/crates/$name/$version")"
+        case "$status" in
+          200)
+            jq -e --arg version "$version" '.version.num == $version' "$response" >/dev/null
+            echo "$name $version is already published; skipping cargo publish."
+            ;;
+          404) echo "publish=true" >> "$GITHUB_OUTPUT" ;;
+          *) echo "::error::crates.io returned HTTP $status"; exit 1 ;;
+        esac
+
+    - if: steps.crate.outputs.publish == 'true'
+      name: Authenticate to crates.io via trusted publishing
+      uses: rust-lang/crates-io-auth-action@v1
+      id: auth
+
+    - if: steps.crate.outputs.publish == 'true'
+      name: Publish to crates.io
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: cargo publish --locked
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
