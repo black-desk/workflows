@@ -19,6 +19,11 @@ GoReleaser configuration and version script or Cargo package. For Go projects,
 Go is installed when that directory contains `go.mod`; its dependency/build
 cache is enabled only when `go.sum` also exists there.
 
+The action excludes the root `.zig-cache/` using local `.git/info/exclude`. This
+preserves setup-zig's cross-run caching without dirtying the checkout for
+GoReleaser or including cached build files in a Cargo package. Tracked project
+files are not changed.
+
 Version scripts must print the complete tag, such as `v0.3.4` or `v0.3.4-rc.1`,
 to stdout. The Cargo fallback adds the `v` prefix automatically. Tags must match
 SemVer 2.0.0 with a `v` prefix, including optional prerelease and build metadata
