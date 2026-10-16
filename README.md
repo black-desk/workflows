@@ -85,16 +85,14 @@ jobs:
           jobs: ${{ toJSON(needs) }}
 ```
 
-**`.github/workflows/cd.yaml`** — runs on the default branch and on pre-release
-tags (see the tagging convention below):
+**`.github/workflows/cd.yaml`** — runs on the default branch for both stable and
+prerelease versions (see the tagging convention below):
 
 ```yaml
 name: Continuous deployment
 
 on:
   push:
-    tags:
-      - v*-*
     branches:
       - master
 
@@ -133,14 +131,22 @@ jobs:
 
 ## Release / tagging convention
 
-The release actions (`crate`, `goreleaser`) share a common tagging flow (inlined
-into each release action):
+The `goreleaser` action uses the same version-driven flow for stable releases
+and prereleases, regardless of the project's language:
 
-- **Stable release** — push to `master`. The release action reads the version
-  from the project file (e.g. `Cargo.toml`) and, if it is a new version, creates
-  the tag automatically, then publishes.
-- **Pre-release** — push a tag like `v1.0.0-rc.1` by hand. The release action
-  publishes that version (driven by the Git ref, since the tag already exists).
+- Push a project version change to `master`. The action reads the version from
+  the project file or version script, creates and pushes its tag, then releases.
+- A version such as `0.1.1-rc.2` automatically produces `v0.1.1-rc.2`, just as
+  `0.1.1` produces `v0.1.1`. Manual prerelease tags are not required.
+- Configure `release.prerelease: auto` in `.goreleaser.yaml` to mark GitHub
+  prereleases. Optional crates.io publication uses the Cargo version suffix to
+  identify prereleases.
+- Only branch push events release; tag push events are ignored. Failed runs can
+  be retried using GitHub Actions **Re-run jobs**.
+
+See [the GoReleaser action](goreleaser/README.md) for configuration and retry
+behavior. The standalone `crate` action is unchanged and does not provide the
+same tag pushing and retry behavior.
 
 ## License
 
