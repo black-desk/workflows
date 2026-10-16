@@ -20,7 +20,10 @@ Go is installed when that directory contains `go.mod`; its dependency/build
 cache is enabled only when `go.sum` also exists there.
 
 Version scripts must print the complete tag, such as `v0.3.4` or `v0.3.4-rc.1`,
-to stdout. The Cargo fallback adds the `v` prefix automatically.
+to stdout. The Cargo fallback adds the `v` prefix automatically. Tags must match
+SemVer 2.0.0 with a `v` prefix, including optional prerelease and build metadata
+(for example, `v1.2.3-rc.1+build.01`). Invalid versions fail before any tag is
+created or pushed.
 
 ## Release flow
 
